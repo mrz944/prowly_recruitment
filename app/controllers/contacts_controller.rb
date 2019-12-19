@@ -18,6 +18,7 @@ class ContactsController < ApplicationController
   # POST /contacts
   def create
     @contact = Contact.new(contact_params)
+    @contact.user_id = User.create.id
 
     if @contact.save
       render json: @contact, status: :created, location: @contact
@@ -32,11 +33,15 @@ class ContactsController < ApplicationController
 
     contacts = []
 
+    user_id = User.create.id
+    time = Time.now
+
     contact_attrs.each do |attrs|
       contact = Contact.new(attrs)
-      contact.save!
-      contacts << {id: contact.id, name: contact.name, email: contact.email}
+      contacts << {id: contact.id, name: contact.name, email: contact.email, user_id: user_id, created_at: time, updated_at: time}
     end
+
+    Contact.insert_all contacts
 
     render json: contacts, status: :created
   end
@@ -63,6 +68,6 @@ class ContactsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def contact_params
-      params.require(:contact).permit(:name, :email)
+      params.require(:contact).permit(:name, :email, contact_addresses_attributes: [:street, :city, :number ])
     end
 end

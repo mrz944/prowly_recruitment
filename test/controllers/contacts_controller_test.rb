@@ -12,8 +12,8 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create contact" do
-    assert_difference('Contact.count') do
-      post contacts_url, params: { contact: { email: @contact.email, name: @contact.name } }, as: :json
+    assert_difference('ContactAddress.count') do
+      post contacts_url, params: { contact: { email: @contact.email, name: @contact.name, contact_addresses_attributes: [ { street: 'a', city: 'b', number: 1 } ] } }, as: :json
     end
 
     assert_response 201

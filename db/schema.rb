@@ -10,14 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_21_053612) do
+ActiveRecord::Schema.define(version: 2019_12_17_095327) do
+
+  create_table "contact_addresses", force: :cascade do |t|
+    t.string "city"
+    t.string "street"
+    t.decimal "number"
+    t.integer "contact_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contact_id"], name: "index_contact_addresses_on_contact_id"
+  end
 
   create_table "contacts", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
     t.index ["email"], name: "index_contacts_on_email", unique: true
+    t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "contact_addresses", "contacts"
+  add_foreign_key "contacts", "users"
 end
