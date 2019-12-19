@@ -37,6 +37,9 @@ class ContactsController < ApplicationController
     time = Time.now
 
     contact_attrs.each do |attrs|
+      # validate presence of name and email
+      next unless attrs[:name].present? && attrs[:email].present?
+
       contact = Contact.new(attrs)
       contacts << {id: contact.id, name: contact.name, email: contact.email, user_id: user_id, created_at: time, updated_at: time}
     end
