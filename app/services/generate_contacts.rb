@@ -8,11 +8,12 @@ class GenerateContacts
   end
 
   def call
-    prefix = SecureRandom.alphanumeric(8)
+    prefix = SecureRandom.alphanumeric(8).downcase
 
     results = []
     amount.times do |idx|
-      results.push(name: "#{prefix}_#{idx}", email: "#{prefix}_#{idx}".downcase + DEFAULT_DOMAIN_PART)
+      name = "#{prefix}_#{idx}"
+      results.push(name: name, email: name + DEFAULT_DOMAIN_PART)
     end
     results
   end
