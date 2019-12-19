@@ -13,10 +13,18 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create contact" do
     assert_difference('ContactAddress.count') do
-      post contacts_url, params: { contact: { email: @contact.email, name: @contact.name, contact_addresses_attributes: [ { street: 'a', city: 'b', number: 1 } ] } }, as: :json
+      post contacts_url, params: { contact: { email: @contact.email, name: @contact.name, contact_addresses_attributes: [{ street: 'a', city: 'b', number: 1 }] } }, as: :json
     end
 
     assert_response 201
+  end
+
+  test "should not create contact with invalid contact_address" do
+    assert_no_difference('ContactAddress.count') do
+      post contacts_url, params: { contact: { email: @contact.email, name: @contact.name, contact_addresses_attributes: [{ street: 'a', city: nil, number: 1 }] } }, as: :json
+    end
+
+    assert_response 422
   end
 
   test "should create many contacts" do
