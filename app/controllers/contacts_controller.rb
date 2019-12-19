@@ -29,7 +29,7 @@ class ContactsController < ApplicationController
 
   # POST /mass_create
   def mass_create
-    contact_attrs = params[:contact_attrs] || GenerateContacts.new.call
+    contact_attrs = params[:generate_contacts] ? GenerateContacts.new.call : contact_params[:mass_contact_attrs]
 
     contacts = []
 
@@ -71,6 +71,10 @@ class ContactsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def contact_params
-      params.require(:contact).permit(:name, :email, contact_addresses_attributes: [:street, :city, :number ])
+      params.require(:contact).permit(
+        :name, :email,
+        mass_contact_attrs: [:name, :email],
+        contact_addresses_attributes: [:street, :city, :number]
+      )
     end
 end

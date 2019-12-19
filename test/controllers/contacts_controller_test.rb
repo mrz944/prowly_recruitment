@@ -31,12 +31,25 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     time = Time.now.to_i
     p "Start at: #{time}"
     assert_difference('Contact.count', 10000) do
-      post mass_create_contacts_url, as: :json
+      post mass_create_contacts_url, params: { generate_contacts: true }, as: :json
     end
 
     now = Time.now.to_i
     p "End at: #{now}"
     p "Delta: #{now - time} seconds"
+    assert_response 201
+  end
+
+  test "should create only many valid contacts" do
+    attrs = [
+      { name: 'valid', email: 'valid@a.pl' },
+      { name: nil, email: 'invalid@a.pl' },
+      { name: 'invalid', email: nil }
+    ]
+    assert_difference('Contact.count', 1) do
+      post mass_create_contacts_url, params: { contact: { mass_contact_attrs: attrs } }, as: :json
+    end
+
     assert_response 201
   end
 
